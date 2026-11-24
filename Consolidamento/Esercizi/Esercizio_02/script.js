@@ -1,50 +1,61 @@
-const valElem = document.getElementById("valore") // riferimento al tag con id valore
+const resElem = document.getElementById("valore") // riferimento al tag con id valore
 const avvisoElem = document.getElementById("avviso")
 
-let counter = 0; 
+let counter = 0 
+
+const MIN = 0 
+const MAX = 100
 
 // HOF funzione che restituisce una funzione
-function cambiaDi(n){
+function cambiaDi(n){ 
     return () => {
-        controllo (counter += n)
-        valElem.textContent = counter    
+        controllo(counter + n)
     }
 }
 
-function azzera(){
-    counter = 0
-    valElem.textContent = counter
-}
-
-function controllo(n2){
-    if(n2 < 0 || n2 > 100){
+function controllo (newValue){
+    if(newValue < MIN || newValue > MAX){
         avvisoElem.textContent = "Limite raggiunto"
         return
     }
-    counter = n2
-    valElem.textContent = counter
-    avvisoElem.textContent = " "
+    counter = newValue
+    resElem.textContent = counter;
+    avvisoElem.textContent = ""
+    
 }
 
-function gestoreTasti(mappa){
-    return function (e){
-        const azione = mappa[e.key]
-        if(azione !== undefined) azione()
-    }
+/*function azzera (){
+    counter = 0
+    resElem.textContent = counter
+    avvisoElem.textContent = ""
+}*/
+
+//fa la stessa cosa del funzione azzera commentata solo scritto con meno codice e facendo riferimento allla funzione controllo
+function azzera (){
+    controllo(0)
 }
 
-const tasti = {
+const keyMap = {
     ArrowUp: cambiaDi(1),
     ArrowDown: cambiaDi(-1),
-    PageUp: cambiaDi(10),
+    PageUp: cambiaDi(+10),
     PageDown: cambiaDi(-10),
     Escape: azzera
 }
 
+//ArrowUp etc.. sono tutti predefiniti js anche il .key
+
+function keyManager(keyMap){
+    return (event) => { 
+        const userAction = keyMap[event.key]
+        if(userAction !== undefined) userAction()
+    }
+}
+
 document.getElementById("meno10").addEventListener("click", cambiaDi(-10))
 document.getElementById("piu10").addEventListener("click", cambiaDi(+10))
-document.getElementById("piu1").addEventListener("click", cambiaDi(+1))
 document.getElementById("meno1").addEventListener("click", cambiaDi(-1))
+document.getElementById("piu1").addEventListener("click", cambiaDi(+1))
 document.getElementById("azzera").addEventListener("click", azzera)
 
-document.addEventListener("keydown", gestoreTasti(tasti))
+document.addEventListener("keydown", keyManager(keyMap))
