@@ -1,8 +1,9 @@
-const valElem = document.getElementById("valore")
+const valElem = document.getElementById("valore") // riferimento al tag con id valore
 const avvisoElem = document.getElementById("avviso")
 
 let counter = 0; 
 
+// HOF funzione che restituisce una funzione
 function cambiaDi(n){
     return () => {
         controllo (counter += n)
